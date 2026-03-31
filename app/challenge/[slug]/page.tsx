@@ -1,6 +1,7 @@
 import AppHeader from "../../../components/app-header";
 import PageShell from "../../../components/page-shell";
 import { challenges } from "../../../lib/challenges";
+import { challengeContent } from "../../../lib/challenge-content";
 
 type ChallengePageProps = {
   params: Promise<{
@@ -14,6 +15,7 @@ export default async function ChallengePage({
   const { slug } = await params;
 
   const challenge = challenges.find((item) => item.slug === slug);
+  const content = challengeContent.find((item) => item.slug === slug);
 
   if (!challenge) {
     return (
@@ -47,8 +49,9 @@ export default async function ChallengePage({
             <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
               Challenge Workspace
             </p>
-            <div className="mt-6 rounded-xl border border-dashed border-zinc-700 p-10 text-center text-zinc-500">
-              CSS editor and live preview go here.
+
+            <div className="mt-6 rounded-xl border border-dashed border-zinc-700 p-6 text-zinc-400">
+              Workspace UI
             </div>
           </div>
 
@@ -64,14 +67,40 @@ export default async function ChallengePage({
 
             <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
               <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-                Coming Next
+                Instructions
               </p>
-              <ul className="mt-4 list-disc pl-5 text-sm leading-7 text-zinc-400">
-                <li>challenge instructions</li>
-                <li>target layout</li>
-                <li>editable CSS</li>
-                <li>live preview</li>
-              </ul>
+
+              {content ? (
+                <ul className="mt-4 list-disc pl-5 text-sm leading-7 text-zinc-400">
+                  {content.instructions.map((instruction) => (
+                    <li key={instruction}>{instruction}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-4 text-sm text-zinc-400">
+                  No instructions yet for this challenge.
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+              <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
+                Starter HTML
+              </p>
+
+              <pre className="mt-4 overflow-x-auto rounded-xl bg-black p-4 text-xs text-zinc-300">
+                {content ? content.starterHtml : "No starter HTML yet."}
+              </pre>
+            </div>
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+              <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
+                Starter CSS
+              </p>
+
+              <pre className="mt-4 overflow-x-auto rounded-xl bg-black p-4 text-xs text-zinc-300">
+                {content ? content.starterCss : "No starter CSS yet."}
+              </pre>
             </div>
           </div>
         </div>

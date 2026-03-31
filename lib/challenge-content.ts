@@ -1,0 +1,97 @@
+export type ChallengeContent = {
+    slug: string;
+    instructions: string[];
+    starterHtml: string;
+    starterCss: string;
+  };
+  
+  export const challengeContent: ChallengeContent[] = [
+    {
+      slug: "center-the-orb",
+      instructions: [
+        "Center the orb perfectly inside the full screen.",
+        "Use Flexbox for both horizontal and vertical centering.",
+        "Do not change the HTML structure.",
+      ],
+      starterHtml: `<div class="challenge-screen">
+    <div class="orb"></div>
+  </div>`,
+      starterCss: `.challenge-screen {
+    min-height: 100vh;
+    background: #09090b;
+  }
+  
+  .orb {
+    width: 120px;
+    height: 120px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  }`,
+    },
+    {
+      slug: "align-the-nav",
+      instructions: [
+        "Place the logo on the left and the nav links on the right.",
+        "Keep all items vertically centered.",
+        "Add spacing between the nav links using Flexbox.",
+      ],
+      starterHtml: `<header class="nav">
+    <div class="logo">CSS Odyssey</div>
+  
+    <nav class="nav-links">
+      <a href="#">Paths</a>
+      <a href="#">Challenges</a>
+      <a href="#">Profile</a>
+    </nav>
+  </header>`,
+      starterCss: `body {
+    margin: 0;
+    background: #09090b;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .nav {
+    padding: 24px 32px;
+    border-bottom: 1px solid #27272a;
+  }
+  
+  .logo {
+    font-weight: 700;
+  }
+  
+  .nav-links a {
+    color: #d4d4d8;
+    text-decoration: none;
+    margin-left: 12px;
+  }`,
+    },
+
+    {
+        slug: "two-column-layout",
+        instructions: [
+          "Create a two-column layout with a sidebar and main content area.",
+          "Use CSS Grid for the overall layout.",
+          "Keep the sidebar narrower than the main content area.",
+        ],
+        starterHtml: `<div class="layout">
+        <aside class="sidebar">Sidebar</aside>
+        <main class="content">Main Content</main>
+      </div>`,
+        starterCss: `.layout {
+        min-height: 100vh;
+        background: #09090b;
+        color: white;
+      }
+      
+      .sidebar {
+        background: #18181b;
+        padding: 24px;
+      }
+      
+      .content {
+        background: #27272a;
+        padding: 24px;
+      }`,
+      },
+  ];
