@@ -1,5 +1,6 @@
 export type ChallengeContent = {
     slug: string;
+    goal: string;
     instructions: string[];
     starterHtml: string;
     starterCss: string;
@@ -8,6 +9,7 @@ export type ChallengeContent = {
   export const challengeContent: ChallengeContent[] = [
     {
       slug: "center-the-orb",
+      goal: "Center the orb perfectly in the middle of the screen.",
       instructions: [
         "Center the orb perfectly inside the full screen.",
         "Use Flexbox for both horizontal and vertical centering.",
@@ -30,6 +32,7 @@ export type ChallengeContent = {
     },
     {
       slug: "align-the-nav",
+      goal: "Place the logo on the left and the links on the right in one clean row.",
       instructions: [
         "Place the logo on the left and the nav links on the right.",
         "Keep all items vertically centered.",
@@ -66,32 +69,32 @@ export type ChallengeContent = {
     margin-left: 12px;
   }`,
     },
-
     {
-        slug: "two-column-layout",
-        instructions: [
-          "Create a two-column layout with a sidebar and main content area.",
-          "Use CSS Grid for the overall layout.",
-          "Keep the sidebar narrower than the main content area.",
-        ],
-        starterHtml: `<div class="layout">
-        <aside class="sidebar">Sidebar</aside>
-        <main class="content">Main Content</main>
-      </div>`,
-        starterCss: `.layout {
-        min-height: 100vh;
-        background: #09090b;
-        color: white;
-      }
-      
-      .sidebar {
-        background: #18181b;
-        padding: 24px;
-      }
-      
-      .content {
-        background: #27272a;
-        padding: 24px;
-      }`,
-      },
+      slug: "two-column-layout",
+      goal: "Create a two-column layout with a narrow sidebar and a wider content area.",
+      instructions: [
+        "Create a two-column layout with a sidebar and main content area.",
+        "Use CSS Grid for the overall layout.",
+        "Keep the sidebar narrower than the main content area.",
+      ],
+      starterHtml: `<div class="layout">
+    <aside class="sidebar">Sidebar</aside>
+    <main class="content">Main Content</main>
+  </div>`,
+      starterCss: `.layout {
+    min-height: 100vh;
+    background: #09090b;
+    color: white;
+  }
+  
+  .sidebar {
+    background: #18181b;
+    padding: 24px;
+  }
+  
+  .content {
+    background: #27272a;
+    padding: 24px;
+  }`,
+    },
   ];
