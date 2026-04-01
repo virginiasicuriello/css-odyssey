@@ -16,6 +16,7 @@ export default function ChallengePlayground({
   starterCss,
 }: ChallengePlaygroundProps) {
   const [cssCode, setCssCode] = useState(starterCss);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const previewDocument = useMemo(() => {
     return `
@@ -44,14 +45,32 @@ export default function ChallengePlayground({
     `;
   }, [cssCode, starterHtml]);
 
+  const handleReset = () => {
+    setCssCode(starterCss);
+    setIsCompleted(false);
+  };
+
+  const handleComplete = () => {
+    setIsCompleted(true);
+  };
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-          Target
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
+              Target
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold">{goal}</h2>
+          </div>
 
-        <h2 className="mt-3 text-2xl font-semibold">{goal}</h2>
+          {isCompleted ? (
+            <span className="rounded-full border border-emerald-700 bg-emerald-950 px-3 py-2 text-xs font-medium uppercase tracking-wide text-emerald-300">
+              Completed
+            </span>
+          ) : null}
+        </div>
 
         <div className="mt-6 rounded-2xl border border-zinc-800 bg-black p-3">
           <iframe
@@ -60,20 +79,36 @@ export default function ChallengePlayground({
             className="h-[400px] w-full rounded-xl border border-zinc-800 bg-white"
           />
         </div>
-        <aside className="space-y-6">
 
-        <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
-          <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-            Instructions
-          </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={handleComplete}
+            className="rounded-lg bg-white px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90"
+          >
+            Mark as Complete
+          </button>
 
-          <ul className="mt-4 list-disc pl-5 text-sm leading-7 text-zinc-400">
-            {instructions.map((instruction) => (
-              <li key={instruction}>{instruction}</li>
-            ))}
-          </ul>
-        </section>
-        </aside>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="rounded-lg border border-zinc-700 px-4 py-3 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-white"
+          >
+            Reset CSS
+          </button>
+        </div>
+
+        {isCompleted ? (
+          <div className="mt-6 rounded-2xl border border-emerald-800 bg-emerald-950/40 p-4">
+            <p className="text-sm font-medium text-emerald-300">
+              Nice work — this challenge is marked as complete.
+            </p>
+            <p className="mt-2 text-sm text-emerald-200/80">
+              Progress saving not added yet..
+            </p>
+          </div>
+        ) : null}
+
         <div className="mt-6 rounded-2xl border border-zinc-800 bg-black p-4">
           <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
             Starter HTML
@@ -86,6 +121,17 @@ export default function ChallengePlayground({
       </section>
 
       <aside className="space-y-6">
+        <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+          <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
+            Instructions
+          </p>
+
+          <ul className="mt-4 list-disc pl-5 text-sm leading-7 text-zinc-400">
+            {instructions.map((instruction) => (
+              <li key={instruction}>{instruction}</li>
+            ))}
+          </ul>
+        </section>
 
         <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
           <div className="flex items-center justify-between gap-4">
@@ -93,18 +139,17 @@ export default function ChallengePlayground({
               CSS Editor
             </p>
 
-            <button
-              type="button"
-              onClick={() => setCssCode(starterCss)}
-              className="rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-white"
-            >
-              Reset
-            </button>
+            <span className="text-xs uppercase tracking-[0.15em] text-zinc-500">
+              Live
+            </span>
           </div>
 
           <textarea
             value={cssCode}
-            onChange={(e) => setCssCode(e.target.value)}
+            onChange={(e) => {
+              setCssCode(e.target.value);
+              setIsCompleted(false);
+            }}
             spellCheck={false}
             className="mt-4 h-[320px] w-full rounded-xl border border-zinc-800 bg-black p-4 font-mono text-sm leading-6 text-zinc-200 outline-none"
           />

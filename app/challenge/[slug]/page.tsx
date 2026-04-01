@@ -33,12 +33,18 @@ export default async function ChallengePage({
     <>
       <AppHeader />
       <PageShell>
-        <div className="mb-10">
+        <div className="mb-10 border-b border-zinc-900 pb-8">
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
             Challenge
           </p>
 
-          <h1 className="mt-3 text-4xl font-bold">{challenge.title}</h1>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <h1 className="text-4xl font-bold">{challenge.title}</h1>
+
+            <span className="rounded-full border border-zinc-700 px-3 py-1 text-xs uppercase tracking-wide text-zinc-400">
+              {challenge.difficulty}
+            </span>
+          </div>
 
           <p className="mt-4 max-w-2xl text-zinc-400">
             {challenge.description}
@@ -55,7 +61,7 @@ export default async function ChallengePage({
         ) : (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
             <p className="text-zinc-400">
-              No challenge yet
+              Not added yet.
             </p>
           </div>
         )}
