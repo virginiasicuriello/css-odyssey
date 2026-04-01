@@ -1,8 +1,8 @@
 import AppHeader from "../../../components/app-header";
 import PageShell from "../../../components/page-shell";
-import ChallengeWorkspaceShell from "../../../components/challenge-workspace-shell";
+import ChallengePlayground from "../../../components/challenge-playground";
 import { challenges } from "../../../lib/challenges";
-import { challengeContent } from "../../../lib/challenge-content";
+import { getChallengeContent } from "../../../lib/challenge-content";
 
 type ChallengePageProps = {
   params: Promise<{
@@ -16,7 +16,7 @@ export default async function ChallengePage({
   const { slug } = await params;
 
   const challenge = challenges.find((item) => item.slug === slug);
-  const content = challengeContent.find((item) => item.slug === slug);
+  const content = getChallengeContent(slug);
 
   if (!challenge) {
     return (
@@ -46,7 +46,7 @@ export default async function ChallengePage({
         </div>
 
         {content ? (
-          <ChallengeWorkspaceShell
+          <ChallengePlayground
             goal={content.goal}
             instructions={content.instructions}
             starterHtml={content.starterHtml}
@@ -55,7 +55,7 @@ export default async function ChallengePage({
         ) : (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
             <p className="text-zinc-400">
-              This challenge does not have content yet.
+              No challenge yet
             </p>
           </div>
         )}

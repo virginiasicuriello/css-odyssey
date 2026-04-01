@@ -97,4 +97,62 @@ export type ChallengeContent = {
     padding: 24px;
   }`,
     },
+    {
+      slug: "mobile-hero-fix",
+      goal: "Make the hero layout adapt better on smaller screens.",
+      instructions: [
+        "Start with a stacked mobile-friendly layout.",
+        "Make spacing feel comfortable on small screens.",
+        "Do not change the HTML structure.",
+      ],
+      starterHtml: `<section class="hero">
+    <div class="hero-copy">
+      <h1>Master CSS Faster</h1>
+      <p>Train with focused layout challenges.</p>
+      <button>Start Training</button>
+    </div>
+  
+    <div class="hero-card">Preview Card</div>
+  </section>`,
+      starterCss: `body {
+    margin: 0;
+    background: #09090b;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .hero {
+    padding: 32px;
+    gap: 24px;
+  }
+  
+  .hero-copy h1 {
+    margin: 0 0 12px;
+    font-size: 40px;
+  }
+  
+  .hero-copy p {
+    margin: 0 0 16px;
+    color: #d4d4d8;
+  }
+  
+  button {
+    border: 0;
+    border-radius: 9999px;
+    padding: 12px 18px;
+    background: white;
+    color: black;
+    font-weight: 700;
+  }
+  
+  .hero-card {
+    min-height: 220px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #27272a, #3f3f46);
+  }`,
+    },
   ];
+  
+  export function getChallengeContent(slug: string) {
+    return challengeContent.find((item) => item.slug === slug);
+  }
