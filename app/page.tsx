@@ -22,17 +22,17 @@ export default function Home() {
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
-                href="/dashboard"
+                href="/signup"
                 className="rounded-lg bg-white px-6 py-3 font-medium text-black"
               >
-                Enter Dashboard
+                Get Started
               </Link>
 
               <Link
-                href="/path/flexbox"
+                href="/login"
                 className="rounded-lg border border-zinc-700 px-6 py-3 font-medium text-white"
               >
-                Start Flexbox Path
+                Log In
               </Link>
             </div>
           </div>
