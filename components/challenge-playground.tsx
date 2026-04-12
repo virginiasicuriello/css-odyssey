@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { saveProgress, getProgress } from "../lib/supabase/progress";
 
 type ChallengePlaygroundProps = {
+  slug: string;
   goal: string;
   instructions: string[];
   starterHtml: string;
@@ -10,6 +12,7 @@ type ChallengePlaygroundProps = {
 };
 
 export default function ChallengePlayground({
+  slug,
   goal,
   instructions,
   starterHtml,
@@ -17,6 +20,23 @@ export default function ChallengePlayground({
 }: ChallengePlaygroundProps) {
   const [cssCode, setCssCode] = useState(starterCss);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(true);
+
+  useEffect(() => {
+    async function loadProgress() {
+      const progress = await getProgress();
+      const match = progress.find((item) => item.challenge_slug === slug);
+
+      if (match) {
+        setIsCompleted(true);
+      }
+
+      setLoadingProgress(false);
+    }
+
+    loadProgress();
+  }, [slug]);
 
   const previewDocument = useMemo(() => {
     return `
@@ -47,11 +67,21 @@ export default function ChallengePlayground({
 
   const handleReset = () => {
     setCssCode(starterCss);
-    setIsCompleted(false);
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    setSaving(true);
+
+    const result = await saveProgress(slug);
+
+    if (result.error) {
+      alert(result.error === "Not logged in" ? "Please log in to save progress." : "Could not save progress. Try again.");
+      setSaving(false);
+      return;
+    }
+
     setIsCompleted(true);
+    setSaving(false);
   };
 
   return (
@@ -65,7 +95,11 @@ export default function ChallengePlayground({
             <h2 className="mt-3 text-2xl font-semibold">{goal}</h2>
           </div>
 
-          {isCompleted ? (
+          {loadingProgress ? (
+            <span className="rounded-full border border-zinc-700 px-3 py-2 text-xs font-medium uppercase tracking-wide text-zinc-500">
+              Loading...
+            </span>
+          ) : isCompleted ? (
             <span className="rounded-full border border-emerald-700 bg-emerald-950 px-3 py-2 text-xs font-medium uppercase tracking-wide text-emerald-300">
               Completed
             </span>
@@ -81,13 +115,16 @@ export default function ChallengePlayground({
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={handleComplete}
-            className="rounded-lg bg-white px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90"
-          >
-            Mark as Complete
-          </button>
+          {!isCompleted ? (
+            <button
+              type="button"
+              onClick={handleComplete}
+              disabled={saving}
+              className="rounded-lg bg-white px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
+            >
+              {saving ? "Saving..." : "Mark as Complete"}
+            </button>
+          ) : null}
 
           <button
             type="button"
@@ -101,10 +138,7 @@ export default function ChallengePlayground({
         {isCompleted ? (
           <div className="mt-6 rounded-2xl border border-emerald-800 bg-emerald-950/40 p-4">
             <p className="text-sm font-medium text-emerald-300">
-              Nice work — this challenge is marked as complete.
-            </p>
-            <p className="mt-2 text-sm text-emerald-200/80">
-              Progress saving not added yet..
+              Nice work — this challenge is saved as complete.
             </p>
           </div>
         ) : null}
@@ -146,10 +180,7 @@ export default function ChallengePlayground({
 
           <textarea
             value={cssCode}
-            onChange={(e) => {
-              setCssCode(e.target.value);
-              setIsCompleted(false);
-            }}
+            onChange={(e) => setCssCode(e.target.value)}
             spellCheck={false}
             className="mt-4 h-[320px] w-full rounded-xl border border-zinc-800 bg-black p-4 font-mono text-sm leading-6 text-zinc-200 outline-none"
           />

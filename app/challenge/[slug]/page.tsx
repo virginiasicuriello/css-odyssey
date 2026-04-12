@@ -53,6 +53,7 @@ export default async function ChallengePage({
 
         {content ? (
           <ChallengePlayground
+            slug={slug}
             goal={content.goal}
             instructions={content.instructions}
             starterHtml={content.starterHtml}
@@ -61,7 +62,7 @@ export default async function ChallengePage({
         ) : (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
             <p className="text-zinc-400">
-              Not added yet.
+              This challenge has metadata, but its playable content has not been added yet.
             </p>
           </div>
         )}
