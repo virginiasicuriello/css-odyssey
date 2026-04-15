@@ -1,6 +1,7 @@
 import AppHeader from "../../../components/app-header";
 import PageShell from "../../../components/page-shell";
 import ChallengePlayground from "../../../components/challenge-playground";
+import Link from "next/link";
 import { challenges } from "../../../lib/challenges";
 import { getChallengeContent } from "../../../lib/challenge-content";
 
@@ -17,6 +18,7 @@ export default async function ChallengePage({
 
   const challenge = challenges.find((item) => item.slug === slug);
   const content = getChallengeContent(slug);
+  const pathSlug = challenge?.pathSlug;
 
   if (!challenge) {
     return (
@@ -34,6 +36,15 @@ export default async function ChallengePage({
       <AppHeader />
       <PageShell>
         <div className="mb-10 border-b border-zinc-900 pb-8">
+          {pathSlug ? (
+            <Link
+              href={`/path/${pathSlug}`}
+              className="mb-4 inline-block text-sm text-zinc-500 transition hover:text-white"
+            >
+              ← Back to {pathSlug} path
+            </Link>
+          ) : null}
+
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
             Challenge
           </p>
@@ -62,7 +73,8 @@ export default async function ChallengePage({
         ) : (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
             <p className="text-zinc-400">
-              This challenge has metadata, but its playable content has not been added yet.
+              This challenge has metadata, but its playable content has not been
+              added yet.
             </p>
           </div>
         )}

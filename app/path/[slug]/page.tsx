@@ -1,6 +1,7 @@
 import AppHeader from "../../../components/app-header";
 import PageShell from "../../../components/page-shell";
 import AnimatedPath from "../../../components/animated-path";
+import Link from "next/link";
 import { challenges, paths } from "../../../lib/challenges";
 import { getServerProgress } from "../../../lib/supabase/server-progress";
 
@@ -34,6 +35,13 @@ export default async function PathPage({ params }: PathPageProps) {
     <>
       <AppHeader />
       <PageShell>
+        <Link
+          href="/dashboard"
+          className="mb-6 inline-block text-sm text-zinc-500 transition hover:text-white"
+        >
+          ← Back to Dashboard
+        </Link>
+
         <AnimatedPath
           path={path}
           pathChallenges={pathChallenges}

@@ -33,10 +33,10 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-black text-white">
-      <div className="w-full max-w-sm space-y-6 px-6">
+    <main className="flex min-h-screen items-center justify-center bg-black px-6 text-white">
+      <div className="w-full max-w-sm space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Create Account</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Create Account</h1>
           <p className="mt-2 text-sm text-zinc-400">
             Sign up to save your progress.
           </p>
