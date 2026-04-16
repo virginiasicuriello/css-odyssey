@@ -15,33 +15,22 @@ export async function POST(request: Request) {
       );
     }
 
-    const prompt = `You are a CSS teaching assistant. A student is working on a CSS layout challenge.
+    const prompt = `You are a concise CSS teaching assistant. A student needs help with a CSS layout challenge.
 
 Challenge: ${challengeTitle}
 Goal: ${goal}
 
-The HTML structure is:
+HTML:
 ${starterHtml}
 
-The student's current CSS is:
+Student's current CSS:
 ${currentCss}
 
-Give the student exactly three things:
-1. One short hint about what CSS property or concept to focus on
-2. One likely mistake in their current CSS
-3. One concrete next step they should try
+Respond with exactly three lines in this format. Each line must be 1 sentence only. Do not write code. Do not give the solution. Just guide them.
 
-Rules:
-- Do NOT give the full solution
-- Do NOT rewrite their CSS
-- Keep each point to 1-2 sentences
-- Be encouraging but direct
-- Use CSS terminology
-
-Respond in this exact format:
-Hint: [your hint]
-Likely issue: [the issue]
-Next step: [the next step]`;
+Hint: [one sentence about which CSS concept or property to explore]
+Likely issue: [one sentence about what is probably wrong or missing]
+Next step: [one sentence telling them one specific thing to try next]`;
 
     const response = await fetch(
       "https://router.huggingface.co/v1/chat/completions",
@@ -54,7 +43,8 @@ Next step: [the next step]`;
         body: JSON.stringify({
           model: "meta-llama/Llama-3.1-8B-Instruct",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 300,
+          max_tokens: 200,
+          temperature: 0.7,
         }),
       }
     );
@@ -76,9 +66,15 @@ Next step: [the next step]`;
     const nextMatch = text.match(/Next step:\s*(.*?)$/s);
 
     const result = {
-      hint: hintMatch?.[1]?.trim() || "Try looking at your display and alignment properties.",
-      likelyIssue: issueMatch?.[1]?.trim() || "Your layout container might be missing a display type.",
-      nextStep: nextMatch?.[1]?.trim() || "Try adding display: flex to your container and see what changes.",
+      hint:
+        hintMatch?.[1]?.trim() ||
+        "Try looking at your display and alignment properties.",
+      likelyIssue:
+        issueMatch?.[1]?.trim() ||
+        "Your layout container might be missing a display type.",
+      nextStep:
+        nextMatch?.[1]?.trim() ||
+        "Try adding display: flex to your container and see what changes.",
     };
 
     return NextResponse.json(result);

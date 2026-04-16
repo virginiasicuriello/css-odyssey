@@ -305,33 +305,49 @@ export default function ChallengePlayground({
           </div>
         ) : null}
 
-        {hintResult ? (
-          <div className="mt-6 space-y-4">
-            <div className="rounded-2xl border border-blue-800/40 bg-blue-950/20 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-blue-400">
-                Hint
+{hintResult ? (
+          <div className="mt-6">
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+                AI Hint
               </p>
-              <p className="mt-2 text-sm leading-6 text-zinc-300">
-                {hintResult.hint}
-              </p>
+
+              <button
+                type="button"
+                onClick={() => setHintResult(null)}
+                className="text-xs text-zinc-500 transition hover:text-white"
+              >
+                Dismiss
+              </button>
             </div>
 
-            <div className="rounded-2xl border border-amber-800/40 bg-amber-950/20 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-amber-400">
-                Likely Issue
-              </p>
-              <p className="mt-2 text-sm leading-6 text-zinc-300">
-                {hintResult.likelyIssue}
-              </p>
-            </div>
+            <div className="mt-3 space-y-3">
+              <div className="rounded-2xl border border-blue-800/40 bg-blue-950/20 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-blue-400">
+                  Hint
+                </p>
+                <p className="mt-2 text-sm leading-6 text-zinc-300">
+                  {hintResult.hint}
+                </p>
+              </div>
 
-            <div className="rounded-2xl border border-emerald-800/40 bg-emerald-950/20 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-emerald-400">
-                Next Step
-              </p>
-              <p className="mt-2 text-sm leading-6 text-zinc-300">
-                {hintResult.nextStep}
-              </p>
+              <div className="rounded-2xl border border-amber-800/40 bg-amber-950/20 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-amber-400">
+                  Likely Issue
+                </p>
+                <p className="mt-2 text-sm leading-6 text-zinc-300">
+                  {hintResult.likelyIssue}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-emerald-800/40 bg-emerald-950/20 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-emerald-400">
+                  Next Step
+                </p>
+                <p className="mt-2 text-sm leading-6 text-zinc-300">
+                  {hintResult.nextStep}
+                </p>
+              </div>
             </div>
           </div>
         ) : null}
