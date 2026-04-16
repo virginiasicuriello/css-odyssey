@@ -63,13 +63,14 @@ export default async function ChallengePage({
         </div>
 
         {content ? (
-          <ChallengePlayground
-            slug={slug}
-            goal={content.goal}
-            instructions={content.instructions}
-            starterHtml={content.starterHtml}
-            starterCss={content.starterCss}
-          />
+         <ChallengePlayground
+         slug={slug}
+         goal={content.goal}
+         instructions={content.instructions}
+         starterHtml={content.starterHtml}
+         starterCss={content.starterCss}
+         challengeTitle={challenge.title}
+       />
         ) : (
           <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
             <p className="text-zinc-400">

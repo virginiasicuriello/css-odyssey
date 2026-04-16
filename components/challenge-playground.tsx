@@ -5,12 +5,19 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { saveProgress, getProgress } from "../lib/supabase/progress";
 
+type HintResult = {
+  hint: string;
+  likelyIssue: string;
+  nextStep: string;
+};
+
 type ChallengePlaygroundProps = {
   slug: string;
   goal: string;
   instructions: string[];
   starterHtml: string;
   starterCss: string;
+  challengeTitle: string;
 };
 
 export default function ChallengePlayground({
@@ -19,12 +26,17 @@ export default function ChallengePlayground({
   instructions,
   starterHtml,
   starterCss,
+  challengeTitle,
 }: ChallengePlaygroundProps) {
   const [cssCode, setCssCode] = useState(starterCss);
   const [isCompleted, setIsCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(true);
   const [justCompleted, setJustCompleted] = useState(false);
+
+  const [hintResult, setHintResult] = useState<HintResult | null>(null);
+  const [hintLoading, setHintLoading] = useState(false);
+  const [hintError, setHintError] = useState("");
 
   const containerRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLSpanElement>(null);
@@ -77,7 +89,8 @@ export default function ChallengePlayground({
         }
 
         if (celebrationRef.current) {
-          const particles = celebrationRef.current.querySelectorAll(".particle");
+          const particles =
+            celebrationRef.current.querySelectorAll(".particle");
 
           gsap.fromTo(
             particles,
@@ -154,6 +167,38 @@ export default function ChallengePlayground({
     setSaving(false);
   };
 
+  const handleGetHint = async () => {
+    setHintLoading(true);
+    setHintError("");
+    setHintResult(null);
+
+    try {
+      const response = await fetch("/api/hint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          challengeTitle,
+          goal,
+          starterHtml,
+          currentCss: cssCode,
+        }),
+      });
+
+      if (!response.ok) {
+        setHintError("Could not get a hint right now. Try again.");
+        setHintLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      setHintResult(data);
+    } catch {
+      setHintError("Something went wrong. Try again.");
+    }
+
+    setHintLoading(false);
+  };
+
   return (
     <div ref={containerRef} className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
@@ -179,25 +224,27 @@ export default function ChallengePlayground({
                   Completed
                 </span>
 
-                <div
-                  ref={celebrationRef}
-                  className="pointer-events-none absolute left-1/2 top-1/2"
-                >
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <span
-                      key={i}
-                      className="particle absolute h-2 w-2 rounded-full"
-                      style={{
-                        backgroundColor:
-                          i % 3 === 0
-                            ? "#6ee7b7"
-                            : i % 3 === 1
-                            ? "#a78bfa"
-                            : "#60a5fa",
-                      }}
-                    />
-                  ))}
-                </div>
+                {justCompleted ? (
+                  <div
+                    ref={celebrationRef}
+                    className="pointer-events-none absolute left-1/2 top-1/2"
+                  >
+                    {Array.from({ length: 12 }).map((_, i) => (
+                      <span
+                        key={i}
+                        className="particle absolute h-2 w-2 rounded-full"
+                        style={{
+                          backgroundColor:
+                            i % 3 === 0
+                              ? "#6ee7b7"
+                              : i % 3 === 1
+                              ? "#a78bfa"
+                              : "#60a5fa",
+                        }}
+                      />
+                    ))}
+                  </div>
+                ) : null}
               </>
             ) : null}
           </div>
@@ -225,6 +272,15 @@ export default function ChallengePlayground({
 
           <button
             type="button"
+            onClick={handleGetHint}
+            disabled={hintLoading}
+            className="rounded-lg border border-blue-500/40 bg-blue-950/30 px-4 py-3 text-sm font-medium text-blue-300 transition hover:bg-blue-950/50 disabled:opacity-50"
+          >
+            {hintLoading ? "Thinking..." : "Get AI Hint"}
+          </button>
+
+          <button
+            type="button"
             onClick={handleReset}
             className="rounded-lg border border-zinc-700 px-4 py-3 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-white"
           >
@@ -240,6 +296,43 @@ export default function ChallengePlayground({
             <p className="text-sm font-medium text-emerald-300">
               Nice work — this challenge is saved as complete.
             </p>
+          </div>
+        ) : null}
+
+        {hintError ? (
+          <div className="mt-6 rounded-2xl border border-red-800 bg-red-950/40 p-4">
+            <p className="text-sm text-red-300">{hintError}</p>
+          </div>
+        ) : null}
+
+        {hintResult ? (
+          <div className="mt-6 space-y-4">
+            <div className="rounded-2xl border border-blue-800/40 bg-blue-950/20 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-blue-400">
+                Hint
+              </p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">
+                {hintResult.hint}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-amber-800/40 bg-amber-950/20 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-amber-400">
+                Likely Issue
+              </p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">
+                {hintResult.likelyIssue}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-emerald-800/40 bg-emerald-950/20 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-emerald-400">
+                Next Step
+              </p>
+              <p className="mt-2 text-sm leading-6 text-zinc-300">
+                {hintResult.nextStep}
+              </p>
+            </div>
           </div>
         ) : null}
 
